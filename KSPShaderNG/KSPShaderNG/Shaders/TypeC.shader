@@ -1,4 +1,4 @@
-Shader "ShaderNG/TypeC"
+Shader "ShaderNG/TR_Reflective_Emissive_Alpha"
 {
 	Properties
 	{
@@ -102,7 +102,7 @@ Shader "ShaderNG/TypeC"
 	void surf(Input IN, inout SurfaceOutput o)
 	{
 		float4 color = tex2D(_MainTex,(IN.uv_MainTex)) * _BurnColor * _Color;
-		float3 emissive = tex2D(_Emissive, (IN.uv_Emissive));
+		float4 emissive = tex2D(_Emissive, (IN.uv_Emissive));
 		//float4 reftint = tex2D(_ReflectionMask, (IN.uv_ReflectionMask));
 		float3 normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 
@@ -115,19 +115,17 @@ Shader "ShaderNG/TypeC"
 		float4 fog = UnderwaterFog(IN.worldPos, color);
 
 		o.Albedo = fog.rgb;
-		//o.Emission = emission;
 		o.Gloss = color.a;
 		o.Specular = max(0.01, color.a);
 		o.Normal = normal;
 
 		float3 worldRefl = WorldReflectionVector(IN, o.Normal);
 		fixed4 reflcol = texCUBE(_Cube, worldRefl);
-		//reflcol *= color.a;
-		//o.Emission = emission + (reflcol.rgb  * color.a);
+
 		o.Emission = emission + (reflcol.rgb  * color.a);
 
-		o.Emission *= _Opacity * fog.a;
-		o.Alpha = _Opacity * fog.a;
+		o.Emission *= _Opacity * fog.a * emissive.a;
+		o.Alpha = _Opacity * fog.a * emissive.a;
 
 	}
 	ENDCG

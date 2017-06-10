@@ -17,16 +17,16 @@ namespace KSPShaderNG
         /// <summary>
         /// Initial Unity Awake call
         /// </summary>
-        public void Awake()
+        public void Start()
         {
             Log.Normal("Loading Shaders");
             LoadShaders();
 
-            var myshader = GetShader("ShaderNG/TypeC");
+            var myshader = GetShader("ShaderNG/TR_Reflective_Emissive_Alpha");
 
             if (myshader == null)
             {
-                Log.Normal("Shader ShaderNG/TypeC was not loaded");
+                Log.Normal("Shader ShaderNG/TR_Reflective_Emissive_Alpha was not loaded");
             } else
             {
                 Log.Normal("Shader loaded normally");
